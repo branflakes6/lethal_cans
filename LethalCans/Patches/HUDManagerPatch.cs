@@ -1,11 +1,10 @@
 using System;
 using GameNetcodeStuff;
 using TMPro;
-
-#nullable enable
+using HarmonyLib;
+using UnityEngine;
 
 namespace LethalCans.Patches
-
 {
     [HarmonyPatch(typeof(HUDManager))]
     [HarmonyPatch("FillEndGameStats")]
@@ -24,10 +23,10 @@ namespace LethalCans.Patches
                 }
                 else {
                     TextMeshProUGUI textMesh = __instance.statsUIElements.playerNotesText[playerIndex];
-                    var drinks = DrinksTracker.drinkAmountsToString()
-                    textMesh.text += "Drinks: " + drinks + "\n"
+                    // var drinks = DrinksTracker.drinkAmountsToString()
+                    // textMesh.text += "Drinks: " + drinks + "\n"
                 }
             }
         }
-    } 
+    }
 }
