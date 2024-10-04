@@ -27,6 +27,7 @@ namespace LethalCans.Patches
                     textMesh.text += "Drinks: " + drinks + "\n";
                 }
             }
+            DrinksTracker.clearDrinkAmounts();
         }
     }
 }

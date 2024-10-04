@@ -172,6 +172,16 @@ namespace LethalCans
             }
         }
 
+
+        public static void clearDrinkAmounts()
+        {
+            foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
+            {
+                setDrinkAmount((int)player.playerClientId, 0);
+             }
+            
+        }
+
         // Sets or updates the amount of drinks for a player
         public static void setDrinkAmount(int playerClientId, int drinks)
         {
