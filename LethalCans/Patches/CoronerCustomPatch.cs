@@ -18,14 +18,11 @@ namespace LethalCans.Patches
         public static void Postfix(int playerClientId, string? codLanguageTag, bool forceOverride)
         {   
             AdvancedCauseOfDeath? causeOfDeath = AdvancedCauseOfDeath.Fetch(codLanguageTag);
-            // getDrinkAmount(player)  
-            // setDrinkAmount(player, drinks)
             if(causeOfDeath != null)
             {
-                int drinkAmount = DrinksTracker.drinksTracker[playerClientId];
+                int drinkAmount = DrinksTracket.getDrinkAmount(causeOfDeath);
                 DrinksTracker.setDrinkAmount(playerClientId, drinkAmount);
-                Debug.Log($"Player {playerClientId} died due to {codLanguageTag}, adding {drinkAmount} drinks.");
-                                
+                Debug.Log($"Player {playerClientId} died due to {codLanguageTag}, adding {drinkAmount} drinks.");                
             }
 
         }
