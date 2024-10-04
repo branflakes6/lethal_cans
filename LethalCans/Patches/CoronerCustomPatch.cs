@@ -24,7 +24,8 @@ namespace LethalCans.Patches
             {
                 int drinkAmount = DrinksTracker.drinksTracker[playerClientId];
                 DrinksTracker.setDrinkAmount(playerClientId, drinkAmount);
-                Debug.Log($"Player {playerClientId} died due to {codLanguageTag}, adding {drinkAmount} drinks.");                
+                Debug.Log($"Player {playerClientId} died due to {codLanguageTag}, adding {drinkAmount} drinks.");
+                                
             }
 
         }
