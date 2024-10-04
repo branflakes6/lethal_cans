@@ -2,8 +2,11 @@ using BepInEx;
 using HarmonyLib;
 using BepInEx.Logging;
 using System;
+using System.IO;
+using System.Reflection;
+using static BepInEx.BepInDependency;
+using LethalCans.Patches;
 
-#nullable enable
 
 namespace LethalCans
 {
@@ -22,17 +25,31 @@ namespace LethalCans
         public static Plugin Instance { get; private set; }
         public PluginLogger PluginLogger;
 
-        private void Awake()
+        private void LateUpdate()
         {
-            Instance = this;
-            PluginLogger = new PluginLogger(Logger);
 
             Harmony harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             harmony.PatchAll();
-
+            NetworkRPBPatch.FindCoronerAssembly();
             PluginLogger.LogInfo($"Plugin {PluginInfo.PLUGIN_NAME} ({PluginInfo.PLUGIN_GUID}) is loaded!");
+            enabled = false;
+
+        }
+
+        private void Awake()
+        {
+            Instance = this;
+
+            if (Logger == null)
+            {
+                throw new NullReferenceException("Logger is not initialized.");
+            }
+
+            PluginLogger = new PluginLogger(Logger);
         }
     }
+
+
 
     public class PluginLogger
     {
@@ -51,3 +68,4 @@ namespace LethalCans
         public void LogDebug(object data) => manualLogSource.LogDebug(data);
     }
 }
+
