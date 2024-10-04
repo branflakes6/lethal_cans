@@ -23,8 +23,8 @@ namespace LethalCans.Patches
                 }
                 else {
                     TextMeshProUGUI textMesh = __instance.statsUIElements.playerNotesText[playerIndex];
-                    // var drinks = DrinksTracker.drinkAmountsToString()
-                    // textMesh.text += "Drinks: " + drinks + "\n"
+                    string drinks = DrinksTracker.drinkAmountsToString((int) playerController.playerClientId);
+                    textMesh.text += "Drinks: " + drinks + "\n";
                 }
             }
         }

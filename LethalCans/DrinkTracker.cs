@@ -172,12 +172,6 @@ namespace LethalCans
             }
         }
 
-
-
-
-
-
-
         // Sets or updates the amount of drinks for a player
         public static void setDrinkAmount(int playerClientId, int drinks)
         {
@@ -191,11 +185,6 @@ namespace LethalCans
                 drinksTracker[playerClientId] = drinks;
             }
         }
-
-
-
-
-
 
         // Calculate how many players witnessed a players death
         public int calculateSpectators(Vector3 deathPosition, int deadPlayerClientId)
@@ -224,11 +213,6 @@ namespace LethalCans
             return spectatorsCount;
         }
 
-
-
-
-
-
         // Determine if a player witnessed a death
         public bool witnessedEvent(PlayerControllerB player, Vector3 deathPosition)
         {
@@ -253,12 +237,8 @@ namespace LethalCans
         }
 
 
-
-
-
-
         // Takes a playerID and returns the amount of drinks they have as a string
-        public string drinkAmountsToString(int playerClientId)
+        public static string drinkAmountsToString(int playerClientId)
         {
             if (drinksTracker.ContainsKey(playerClientId))
             {
@@ -268,7 +248,7 @@ namespace LethalCans
                     string drinksString = drinks.ToString();
                     return drinksString;
                 }
-                return "";
+                return "0";
             }
             return "";
         }
