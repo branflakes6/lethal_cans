@@ -262,6 +262,28 @@ namespace LethalCans
             }
             return "";
         }
+
+        /* public string calculateTotalDeaths()
+        {
+            Debug.Log("Calculating total deaths");
+
+            int totalDeaths = 0;
+
+            // Get all active players in the game
+            GameNetcodeStuff.PlayerControllerB[] allPlayers = FindObjectsOfType<GameNetcodeStuff.PlayerControllerB>();
+
+            // Loop through each player to check if they are dead
+            foreach (GameNetcodeStuff.PlayerControllerB player in allPlayers)
+            {
+                // Check if the player is dead
+                if (player.clientId == deadPlayerClientId) {totalDeaths++;
+                }
+            }
+            // Log the total number of deaths
+            Debug.Log("Total Deaths: " + totalDeaths);
+            // Return the total number of dead players
+            return totalDeaths.toString();
+        } */
     }
 
 }
