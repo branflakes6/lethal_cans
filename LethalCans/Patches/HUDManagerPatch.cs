@@ -28,7 +28,7 @@ namespace LethalCans.Patches
                     /* TextMeshProUGUI textMesh = __instance.statsUIElements.playerNotesText[playerIndex];
                     string aliveDrinks = DrinkTracker.calculateTotalDeaths();
                     textMesh.text += "Drinks: " + aliveDrinks + "\n"; */
-                    continue
+                    continue;
 
                 }
                 else { //For Dead Players
