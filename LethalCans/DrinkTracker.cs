@@ -196,18 +196,15 @@ namespace LethalCans
             {
                 drinksTracker[playerClientId] = drinks;
             }
-        }
-
-        public static void addSpectatorDrinks(int playerClientId, int drinks)
-        {
-            Plugin.Instance.PluginLogger.LogDebug("Setting Spectator Drinks");
-            Plugin.Instance.PluginLogger.LogDebug(drinks);
-            if (drinksTracker.ContainsKey(playerClientId))
+            else
             {
-                drinksTracker[playerClientId] += drinks;
+                if (drinksTracker[playerClientId] == 0)
+                {
+                    drinksTracker[playerClientId] = drinks;
+                }
             }
-
         }
+
         // Calculate how many players witnessed a players death
         public static int calculateSpectators(Vector3 deathPosition, int deadPlayerClientId)
         {
@@ -223,21 +220,23 @@ namespace LethalCans
 
             foreach (GameNetcodeStuff.PlayerControllerB player in allPlayers)
             {
+                if (!player.disconnectedMidGame && !player.isPlayerDead && !player.isPlayerControlled)
+                {
+                    continue;
+                }
                 Plugin.Instance.PluginLogger.LogDebug(player.playerClientId);
                 Plugin.Instance.PluginLogger.LogDebug(player.playerUsername);
 
                 // Ignore dead player
-                if ((int) player.playerClientId == deadPlayerClientId) { continue; }
+                if ((int)player.playerClientId == deadPlayerClientId) { continue; }
 
                 // Call method to check for witnesses
                 if (witnessedEvent(player, deathPosition))
-                { 
-                    spectatorsCount++; 
+                {
+                    spectatorsCount++;
                 }
-            }
-            if (spectatorsCount > 0)
-            {
-                DrinksTracker.addSpectatorDrinks(deadPlayerClientId, spectatorsCount);
+
+
             }
             // Return the total number of spectators
             Plugin.Instance.PluginLogger.LogDebug("spectatorsCount");
@@ -254,8 +253,8 @@ namespace LethalCans
             Vector3 playerPosition = player.transform.position;
             Vector3 playerForward = player.transform.forward;
             Plugin.Instance.PluginLogger.LogDebug($"Player forward: {playerForward}");
-           // Calculate the direction from the player to the death position
-           Vector3 directionToDeath = (deathPosition - playerPosition).normalized;
+            // Calculate the direction from the player to the death position
+            Vector3 directionToDeath = (deathPosition - playerPosition).normalized;
             Plugin.Instance.PluginLogger.LogDebug($"Player directonToDeath: {directionToDeath}");
             // Is death within FOV
             float angle = Vector3.Angle(playerForward, directionToDeath);
