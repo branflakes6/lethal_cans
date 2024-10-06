@@ -177,7 +177,12 @@ namespace LethalCans
         {
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
             {
-                setDrinkAmount((int)player.playerClientId, 0);
+                int playerId = (int)player.playerClientId;
+                if (drinksTracker.ContainsKey(playerId))
+                {
+                    drinksTracker[playerId] = 0;
+                }
+                   
             }
             
         }
