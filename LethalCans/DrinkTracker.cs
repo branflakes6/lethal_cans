@@ -178,19 +178,15 @@ namespace LethalCans
             foreach (PlayerControllerB player in StartOfRound.Instance.allPlayerScripts)
             {
                 setDrinkAmount((int)player.playerClientId, 0);
-             }
+            }
             
         }
 
         // Sets or updates the amount of drinks for a player
-        public static void setDrinkAmount(int playerClientId, int drinks)
+        public static void setDrinkAmountDeath(int playerClientId, int drinks)
         {
             Debug.Log("Setting Drinks.");
-            if (drinksTracker.ContainsKey(playerClientId))
-            {
-                drinksTracker[playerClientId] += drinks;
-            }
-            else
+            if (!drinksTracker.ContainsKey(playerClientId))
             {
                 drinksTracker[playerClientId] = drinks;
             }
@@ -199,18 +195,18 @@ namespace LethalCans
         // Calculate how many players witnessed a players death
         public int calculateSpectators(Vector3 deathPosition, int deadPlayerClientId)
         {
-            Debug.Log("Calculating Spectators");
-            int spectatorsCount = 0;
-            // Get all active players
-            //GameNetcodeStuff.PlayerControllerB[] allPlayers = FindObjectsOfType<PlayerController>();
-            // Loop through each player
-            //foreach (GameNetcodeStuff.PlayerControllerB player in allPlayers)
-            //{
-            //    // Ignore dead player
+        Debug.Log("Calculating Spectators");
+        int spectatorsCount = 0;
+        // Get all active players
+        //GameNetcodeStuff.PlayerControllerB[] allPlayers = FindObjectsOfType<PlayerController>();
+        // Loop through each player
+        //foreach (GameNetcodeStuff.PlayerControllerB player in allPlayers)
+        //{
+        //    // Ignore dead player
             //    if (player.clientId == deadPlayerClientId){ continue;}
 
-            //    // Call method to check for witnesses
-            //    if (witnessedEvent(player, deathPosition))
+        //    // Call method to check for witnesses
+         //    if (witnessedEvent(player, deathPosition))
             //    {   spectatorsCount++;  }
             //}
             if (spectatorsCount > 0)
@@ -235,12 +231,12 @@ namespace LethalCans
             float angle = Vector3.Angle(playerForward, directionToDeath);
             if (angle < 45f) //FOV
             {
-                //// Optional: Check for line of sight using raycast (no walls or obstacles blocking view)
-                //if (HasLineOfSightToPosition(deathPosition, player))
-                //{
-                //    // Player witnessed the event
-                //    return true;
-                //}
+            //// Optional: Check for line of sight using raycast (no walls or obstacles blocking view)
+            //if (HasLineOfSightToPosition(deathPosition, player))
+            //{
+            //    // Player witnessed the event
+            //    return true;
+            //}
             }
             // Player did not witness the event
             return false;
