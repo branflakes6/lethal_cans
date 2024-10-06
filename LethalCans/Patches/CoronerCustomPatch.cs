@@ -77,7 +77,7 @@ namespace LethalCans.Patches
             AdvancedCauseOfDeath? causeOfDeath = AdvancedCauseOfDeath.Fetch(codLanguageTag);
             if (causeOfDeath != null)
             {
-                int drinkAmount = DrinksTracker.getDrinkAmount(causeOfDeath);
+                int drinkAmount = DrinksTracker.getDrinkAmount(causeOfDeath, playerClientId);
                 DrinksTracker.setDrinkAmountDeath(playerClientId, drinkAmount);
                 Plugin.Instance.PluginLogger.LogDebug("Player died and must drink.");
                 Plugin.Instance.PluginLogger.LogDebug(drinkAmount);

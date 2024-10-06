@@ -15,6 +15,11 @@ namespace LethalCans
         public static int getDrinkAmount(Coroner.AdvancedCauseOfDeath? causeOfDeath)
         {
             Plugin.Instance.PluginLogger.LogDebug("Calculating Drinks");
+            PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerId];
+            Vector3 deathPosition = player.transform.position;
+
+            int spectators = calculateSpectators(deathPosition, playerId);
+
             // This gets the death tag from coroner
             var deathTag = ((Coroner.AdvancedCauseOfDeath)causeOfDeath).GetLanguageTag();
             int medium = 1;
