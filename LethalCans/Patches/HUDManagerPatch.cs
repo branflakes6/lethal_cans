@@ -13,10 +13,15 @@ namespace LethalCans.Patches
     {
         public static void Postfix(HUDManager __instance)
         {
+            Plugin.Instance.PluginLogger.LogDebug(DrinksTracker.drinksTracker);
+
             // Loop through each player, get their drink amounts and add it to their death string
             for (int playerIndex = 0; playerIndex < __instance.statsUIElements.playerNotesText.Length; playerIndex++)
             {
                 PlayerControllerB playerController = __instance.playersManager.allPlayerScripts[playerIndex];
+                Plugin.Instance.PluginLogger.LogDebug(playerController.playerUsername);
+                Plugin.Instance.PluginLogger.LogDebug(playerIndex);
+
                 if (!playerController.disconnectedMidGame && !playerController.isPlayerDead && !playerController.isPlayerControlled)
                 {
                     continue;
