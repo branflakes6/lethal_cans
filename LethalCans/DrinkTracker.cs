@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GameNetcodeStuff;
 using UnityEngine;
+using UnityEngineInternal;
 
 namespace LethalCans
 {
@@ -12,7 +13,7 @@ namespace LethalCans
         public static Dictionary<int, int> drinksTracker = new Dictionary<int, int>();
 
         // Calcualte the number of drinks based on how a player died
-        public static int getDrinkAmount(Coroner.AdvancedCauseOfDeath? causeOfDeath)
+        public static int getDrinkAmount(Coroner.AdvancedCauseOfDeath? causeOfDeath, int playerId)
         {
             Plugin.Instance.PluginLogger.LogDebug("Calculating Drinks");
             PlayerControllerB player = StartOfRound.Instance.allPlayerScripts[playerId];
@@ -202,51 +203,78 @@ namespace LethalCans
             }
         }
 
-        // Calculate how many players witnessed a players death
-        public int calculateSpectators(Vector3 deathPosition, int deadPlayerClientId)
+        public static void addSpectatorDrinks(int playerClientId, int drinks)
         {
-        Debug.Log("Calculating Spectators");
-        int spectatorsCount = 0;
-        // Get all active players
-        //GameNetcodeStuff.PlayerControllerB[] allPlayers = FindObjectsOfType<PlayerController>();
-        // Loop through each player
-        //foreach (GameNetcodeStuff.PlayerControllerB player in allPlayers)
-        //{
-        //    // Ignore dead player
-            //    if (player.clientId == deadPlayerClientId){ continue;}
+            Plugin.Instance.PluginLogger.LogDebug("Setting Spectator Drinks");
+            Plugin.Instance.PluginLogger.LogDebug(drinks);
+            if (drinksTracker.ContainsKey(playerClientId))
+            {
+                drinksTracker[playerClientId] += drinks;
+            }
 
-        //    // Call method to check for witnesses
-         //    if (witnessedEvent(player, deathPosition))
-            //    {   spectatorsCount++;  }
-            //}
+        }
+        // Calculate how many players witnessed a players death
+        public static int calculateSpectators(Vector3 deathPosition, int deadPlayerClientId)
+        {
+            Plugin.Instance.PluginLogger.LogDebug("Calculating Spectators");
+            int spectatorsCount = 0;
+            // Get all active players
+
+            GameNetcodeStuff.PlayerControllerB[] allPlayers = UnityEngine.Object.FindObjectsOfType<PlayerControllerB>();
+
+            Plugin.Instance.PluginLogger.LogDebug(allPlayers);
+
+            // Loop through each player
+
+            foreach (GameNetcodeStuff.PlayerControllerB player in allPlayers)
+            {
+                Plugin.Instance.PluginLogger.LogDebug(player.playerClientId);
+                Plugin.Instance.PluginLogger.LogDebug(player.playerUsername);
+
+                // Ignore dead player
+                if ((int) player.playerClientId == deadPlayerClientId) { continue; }
+
+                // Call method to check for witnesses
+                if (witnessedEvent(player, deathPosition))
+                { 
+                    spectatorsCount++; 
+                }
+            }
             if (spectatorsCount > 0)
             {
-                DrinksTracker.setDrinkAmount(deadPlayerClientId, spectatorsCount);
+                DrinksTracker.addSpectatorDrinks(deadPlayerClientId, spectatorsCount);
             }
             // Return the total number of spectators
-            Debug.Log("spectatorsCount");
-            Debug.Log(spectatorsCount);
+            Plugin.Instance.PluginLogger.LogDebug("spectatorsCount");
+            Plugin.Instance.PluginLogger.LogDebug(spectatorsCount);
             return spectatorsCount;
         }
 
         // Determine if a player witnessed a death
-        public bool witnessedEvent(PlayerControllerB player, Vector3 deathPosition)
+        public static bool witnessedEvent(PlayerControllerB player, Vector3 deathPosition)
         {
+            Plugin.Instance.PluginLogger.LogDebug("Checking if player witnessed death");
+            Plugin.Instance.PluginLogger.LogDebug(player.playerUsername);
             // Get the player's current position and forward direction
             Vector3 playerPosition = player.transform.position;
             Vector3 playerForward = player.transform.forward;
-            // Calculate the direction from the player to the death position
-            Vector3 directionToDeath = (deathPosition - playerPosition).normalized;
+            Plugin.Instance.PluginLogger.LogDebug($"Player forward: {playerForward}");
+           // Calculate the direction from the player to the death position
+           Vector3 directionToDeath = (deathPosition - playerPosition).normalized;
+            Plugin.Instance.PluginLogger.LogDebug($"Player directonToDeath: {directionToDeath}");
             // Is death within FOV
             float angle = Vector3.Angle(playerForward, directionToDeath);
+            Plugin.Instance.PluginLogger.LogDebug($"Player forward angle: {angle}");
             if (angle < 45f) //FOV
             {
-            //// Optional: Check for line of sight using raycast (no walls or obstacles blocking view)
-            //if (HasLineOfSightToPosition(deathPosition, player))
-            //{
-            //    // Player witnessed the event
-            //    return true;
-            //}
+                Plugin.Instance.PluginLogger.LogDebug($"Death in FOV");
+                // Optional: Check for line of sight using raycast (no walls or obstacles blocking view)
+                // if (player.HasLineOfSightToPosition(deathPosition))
+                // {
+                //     // Player witnessed the event
+                //     return true;
+                // }
+                return true;
             }
             // Player did not witness the event
             return false;
