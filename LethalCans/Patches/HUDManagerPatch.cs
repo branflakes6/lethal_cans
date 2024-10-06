@@ -1,11 +1,10 @@
 using System;
 using GameNetcodeStuff;
 using TMPro;
-
-#nullable enable
+using HarmonyLib;
+using UnityEngine;
 
 namespace LethalCans.Patches
-
 {
     [HarmonyPatch(typeof(HUDManager))]
     [HarmonyPatch("FillEndGameStats")]
@@ -14,20 +13,27 @@ namespace LethalCans.Patches
     {
         public static void Postfix(HUDManager __instance)
         {
+            Plugin.Instance.PluginLogger.LogDebug(DrinksTracker.drinksTracker);
+
             // Loop through each player, get their drink amounts and add it to their death string
             for (int playerIndex = 0; playerIndex < __instance.statsUIElements.playerNotesText.Length; playerIndex++)
             {
+                
                 PlayerControllerB playerController = __instance.playersManager.allPlayerScripts[playerIndex];
+                Plugin.Instance.PluginLogger.LogDebug(playerController.playerUsername);
+                Plugin.Instance.PluginLogger.LogDebug(playerIndex);
+
                 if (!playerController.disconnectedMidGame && !playerController.isPlayerDead && !playerController.isPlayerControlled)
                 {
                     continue;
                 }
                 else {
                     TextMeshProUGUI textMesh = __instance.statsUIElements.playerNotesText[playerIndex];
-                    var drinks = DrinksTracker.drinkAmountsToString()
-                    textMesh.text += "Drinks: " + drinks + "\n"
+                    string drinks = DrinksTracker.drinkAmountsToString((int) playerController.playerClientId);
+                    textMesh.text += "Drinks: " + drinks + "\n";
                 }
             }
+            DrinksTracker.clearDrinkAmounts();
         }
-    } 
+    }
 }
