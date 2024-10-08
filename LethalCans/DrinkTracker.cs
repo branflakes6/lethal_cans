@@ -21,6 +21,7 @@ namespace LethalCans
 
             int spectators = calculateSpectators(deathPosition, playerId);
             Plugin.Instance.PluginLogger.LogDebug($"Specators: {spectators}");
+
             // This gets the death tag from coroner
             var deathTag = ((Coroner.AdvancedCauseOfDeath)causeOfDeath).GetLanguageTag();
             int medium = 1;
@@ -283,7 +284,19 @@ namespace LethalCans
             return false;
         }
 
+        public static int getDrinks(int playerClientId)
+        {
+            if (drinksTracker.ContainsKey(playerClientId))
+            {
+                int drinks = drinksTracker[playerClientId];
+                if (drinks > 0)
+                {
+                    return drinks;
+                }
+            }
+            return 0;
 
+        }
         // Takes a playerID and returns the amount of drinks they have as a string
         public static string drinkAmountsToString(int playerClientId)
         {

@@ -29,8 +29,14 @@ namespace LethalCans.Patches
                 }
                 else {
                     TextMeshProUGUI textMesh = __instance.statsUIElements.playerNotesText[playerIndex];
-                    string drinks = DrinksTracker.drinkAmountsToString((int) playerController.playerClientId);
-                    textMesh.text += "Drinks: " + drinks + "\n";
+                    int total_drinks = 0;
+                    if (StartOfRound.Instance.allPlayersDead)
+                    {
+                        total_drinks += 5;
+                    }
+                    int death_drinks = DrinksTracker.getDrinks((int)playerController.playerClientId);
+                    total_drinks += death_drinks;
+                    textMesh.text += "Drinks: " + total_drinks.ToString() + "\n";
                 }
             }
             DrinksTracker.clearDrinkAmounts();
