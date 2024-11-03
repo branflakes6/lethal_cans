@@ -17,7 +17,6 @@ namespace LethalCans.Patches
             // Loop through each player, get their drink amounts and add it to their death string
             for (int playerIndex = 0; playerIndex < __instance.statsUIElements.playerNotesText.Length; playerIndex++)
             {
-                
                 PlayerControllerB playerController = __instance.playersManager.allPlayerScripts[playerIndex];
                 Coroner.AdvancedCauseOfDeath? cod = Coroner.API.GetCauseOfDeath(playerController);
                 Plugin.Instance.PluginLogger.LogDebug(playerController.playerUsername);
@@ -50,7 +49,7 @@ namespace LethalCans.Patches
                         death_drinks = DrinksTracker.getDrinks((int)playerController.playerClientId);
                     }
                     total_drinks += death_drinks;
-                    textMesh.text += "Drinks: " + total_drinks.ToString() + "\n";
+                    textMesh.text = "Drinks: " + total_drinks.ToString() + "\n" + textMesh.text;
 
                 }
             }
