@@ -3,6 +3,7 @@ using GameNetcodeStuff;
 using TMPro;
 using HarmonyLib;
 using UnityEngine;
+using Coroner;
 
 namespace LethalCans.Patches
 {
@@ -13,15 +14,15 @@ namespace LethalCans.Patches
     {
         public static void Postfix(HUDManager __instance)
         {
-            Plugin.Instance.PluginLogger.LogDebug(DrinksTracker.drinksTracker);
-
             // Loop through each player, get their drink amounts and add it to their death string
             for (int playerIndex = 0; playerIndex < __instance.statsUIElements.playerNotesText.Length; playerIndex++)
             {
-                
                 PlayerControllerB playerController = __instance.playersManager.allPlayerScripts[playerIndex];
+                Coroner.AdvancedCauseOfDeath? cod = Coroner.API.GetCauseOfDeath(playerController);
                 Plugin.Instance.PluginLogger.LogDebug(playerController.playerUsername);
                 Plugin.Instance.PluginLogger.LogDebug(playerIndex);
+                Plugin.Instance.PluginLogger.LogDebug(cod);
+                Plugin.Instance.PluginLogger.LogDebug(((Coroner.AdvancedCauseOfDeath)cod).GetLanguageTag());
 
                 if (!playerController.disconnectedMidGame && !playerController.isPlayerDead && !playerController.isPlayerControlled)
                 {
@@ -29,11 +30,31 @@ namespace LethalCans.Patches
                 }
                 else {
                     TextMeshProUGUI textMesh = __instance.statsUIElements.playerNotesText[playerIndex];
-                    string drinks = DrinksTracker.drinkAmountsToString((int) playerController.playerClientId);
-                    textMesh.text += "Drinks: " + drinks + "\n";
+                    int total_drinks = 0;
+                    if (StartOfRound.Instance.allPlayersDead)
+                    {
+                        total_drinks += 5;
+                    }
+                    int death_drinks;
+                    if (((Coroner.AdvancedCauseOfDeath)cod).GetLanguageTag() == "DeathGravity")
+                    {
+                        death_drinks = 15;
+                    }
+                    else if (((Coroner.AdvancedCauseOfDeath)cod).GetLanguageTag() == "DeathUnknown")
+                    {
+                        death_drinks = 5;
+                    }
+                    else
+                    {
+                        death_drinks = DrinksTracker.getDrinks((int)playerController.playerClientId);
+                    }
+                    total_drinks += death_drinks;
+                    textMesh.text = "Drinks: " + total_drinks.ToString() + "\n" + textMesh.text;
+
                 }
             }
             DrinksTracker.clearDrinkAmounts();
+            HUDManager.Instance.endgameStatsAnimator.speed = 0.5f;
         }
     }
 }
